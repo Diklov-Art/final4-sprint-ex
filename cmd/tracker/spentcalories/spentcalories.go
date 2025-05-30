@@ -54,7 +54,7 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 
 func RunningSpentCalories(steps int, weight float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || weight <= 0 || duration <= 0 {
-		return 0, errors.New("некорректные параметры")
+		return 0, errors.New("некорректные параметры") // проверка
 	}
 
 	speed := meanSpeed(steps, 0, duration) // рост не учитывается для бега
