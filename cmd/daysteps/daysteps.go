@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"Desktop\Go-Lang\GOlang\Dev\final4-sprint-ex\cmd\tracker\daysteps"
+	"github.com/Yandex-Practicum/tracker/cmd/tracker/spentcalories"
 )
 
 const (

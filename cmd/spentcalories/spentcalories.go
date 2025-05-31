@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"Desktop\Go-Lang\GOlang\Dev\final4-sprint-ex\cmd\tracker\spentcalories"
 )
 
 const (
