@@ -15,43 +15,61 @@ const (
 	mInKm      = 1000 // метров в километре
 )
 
-// принимаем данные о кол-во шагов + время прогулки
+// постарался переработать корректность ошибок и их вывод
 func parsePackage(data string) (int, time.Duration, error) {
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
-		return 0, 0, errors.New("неверный формат данных")
+		return 0, 0, errors.New("input must contain exactly one comma")
 	}
 
-	steps, err := strconv.Atoi(parts[0])
+	stepsStr := strings.TrimSpace(parts[0])
+	if stepsStr == "" {
+		return 0, 0, errors.New("steps value is empty")
+	}
+
+	steps, err := strconv.Atoi(stepsStr)
 	if err != nil {
-		return 0, 0, errors.New("неверный формат количества шагов")
+		return 0, 0, fmt.Errorf("invalid steps format: %v", err)
 	}
-
 	if steps <= 0 {
-		return 0, 0, errors.New("количество шагов должно быть положительным")
+		return 0, 0, errors.New("steps must be positive")
 	}
 
-	duration, err := time.ParseDuration(parts[1])
+	durationStr := strings.TrimSpace(parts[1])
+	if durationStr == "" {
+		return 0, 0, errors.New("duration is empty")
+	}
+
+	duration, err := time.ParseDuration(durationStr)
 	if err != nil {
-		return 0, 0, errors.New("неверный формат продолжительности")
+		return 0, 0, fmt.Errorf("invalid duration format: %v", err)
+	}
+	if duration <= 0 {
+		return 0, 0, errors.New("duration must be positive")
 	}
 
-	return steps, duration, nil // возвращаем данные или ошибку
+	return steps, duration, nil
 }
 
-// парсим строку ---> дистанция в км + кол-во кал.
-func DayActionInfo(data string, weight, height float64) string {
+func DayActionInfo(data string, weight, height float64) (string, error) {
 	steps, duration, err := parsePackage(data)
 	if err != nil {
-		return ""
+		return "", fmt.Errorf("invalid input '%s': %v", data, err)
 	}
 
-	distance := float64(steps) * stepLength / mInKm
-	calories, err := spentcalories.WalkingSpentCalories(steps, weight, height, duration)
-	if err != nil {
-		return ""
+	if weight <= 0 {
+		return "", errors.New("weight must be positive")
+	}
+	if height <= 0 {
+		return "", errors.New("height must be positive")
 	}
 
-	return fmt.Sprintf("Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.",
-		steps, distance, calories)
+	distance := float64(steps) * walkingStepLength / mInKm
+	calories := weight * distance * 0.029 // Simplified walking calories calculation
+
+	result := fmt.Sprintf(
+		"Steps: %d\nDistance: %.2f km\nCalories burned: %.2f",
+		steps, distance, calories,
+	)
+	return result, nil
 }
