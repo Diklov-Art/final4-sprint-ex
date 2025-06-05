@@ -65,7 +65,7 @@ func DayActionInfo(data string, weight, height float64) (string, error) {
 	}
 
 	distance := float64(steps) * walkingStepLength / mInKm
-	calories := weight * distance * 0.029 // Simplified walking calories calculation
+	calories := weight * distance * 0.029 
 
 	result := fmt.Sprintf(
 		"Steps: %d\nDistance: %.2f km\nCalories burned: %.2f",

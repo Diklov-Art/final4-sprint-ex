@@ -13,7 +13,7 @@ const (
 	stepLengthCoefficient      = 0.414 // коэффициент длины шага
 	mInKm                      = 1000  // метров в километре
 	minInH                     = 60    // минут в часе
-	walkingCaloriesCoefficient = 0.029 // коэффициент для ходьбы
+	walkingCaloriesCoefficient = 0.029 // коэффициент для ходьбы.
 )
 // постарался сделать корректный вывод ошибок
 func parseTraining(data string) (int, string, time.Duration, error) {
