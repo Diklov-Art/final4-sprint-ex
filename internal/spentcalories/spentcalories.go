@@ -97,8 +97,15 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 		return "", errors.New("unknown type of training")
 	}
 
+	// Проверяем все ошибки
+	if errDist != nil {
+		return "", fmt.Errorf("distance calculation failed: %v", errDist)
+	}
+	if errSpeed != nil {
+		return "", fmt.Errorf("speed calculation failed: %v", errSpeed)
+	}
 	if errCal != nil {
-		return "", errCal
+		return "", fmt.Errorf("calories calculation failed: %v", errCal)
 	}
 
 	return fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f",
