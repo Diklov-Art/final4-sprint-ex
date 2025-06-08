@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"Desktop\Go-Lang\GOlang\Dev\final4-sprint-ex\cmd\daysteps"
-	"Desktop\Go-Lang\GOlang\Dev\final4-sprint-ex\cmd\spentcalories"
+	"Desktop\Go-Lang\GOlang\Dev\final4-sprint-ex\internal\daysteps"
+	"Desktop\Go-Lang\GOlang\Dev\final4-sprint-ex\internal\spentcalories"
 )
 
 func main() {
