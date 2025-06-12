@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"Desktop\Go-Lang\GOlang\Dev\final4-sprint-ex\internal\spentcalories"
+	"Desktop\final4-sprint-ex\internal\spentcalories"
 )
 
 const (
