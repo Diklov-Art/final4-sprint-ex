@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"Desktop\final4-sprint-ex\internal\spentcalories"
 )
 
 const (
@@ -53,7 +52,7 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 	return dist / duration.Hours()
 }
 
-func RunningSpentCalories(steps int, weight float64, duration time.Duration) (float64, error) {
+func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || weight <= 0 || duration <= 0 {
 		return 0, errors.New("incorrect parameters") // проверка
 	}
@@ -82,17 +81,16 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	}
 
 	var dist, speed, calories float64
-	var errCal error
 
 	switch activity {
 	case "Ходьба":
 		dist = distance(steps, height)
 		speed = meanSpeed(steps, height, duration)
-		calories, errCal = WalkingSpentCalories(steps, weight, height, duration)
+		calories, err = WalkingSpentCalories(steps, weight, height, duration)
 	case "Бег":
 		dist = distance(steps, height)
 		speed = meanSpeed(steps, height, duration)
-		calories, errCal = RunningSpentCalories(steps, weight, duration)
+		calories, err = RunningSpentCalories(steps, weight, height, duration)
 	default:
 		return "", errors.New("unknown type of training")
 	}
