@@ -6,14 +6,14 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"Desktop\final4-sprint-ex\internal\spentcalories"
 )
 
 const (
-	stepLengthCoefficient      = 0.414 // коэффициент длины шага
-	mInKm                      = 1000  // метров в километре
-	minInH                     = 60    // минут в часе
-	walkingCaloriesCoefficient = 0.029 // коэффициент для ходьбы
+	lenStep                    = 0.65 // средняя длина шага.
+	mInKm                      = 1000 // количество метров в километре.
+	minInH                     = 60   // количество минут в часе.
+	stepLengthCoefficient      = 0.45 // коэффициент для расчета длины шага на основе роста.
+	walkingCaloriesCoefficient = 0.5  // коэффициент для расчета калорий при ходьбе
 )
 
 func parseTraining(data string) (int, string, time.Duration, error) {
@@ -53,12 +53,12 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 	return dist / duration.Hours()
 }
 
-func RunningSpentCalories(steps int, weight float64, duration time.Duration) (float64, error) {
+func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || weight <= 0 || duration <= 0 {
 		return 0, errors.New("incorrect parameters") // проверка
 	}
 
-	speed := meanSpeed(steps, 0, duration) // рост не учитывается для бега
+	speed := meanSpeed(steps, height, duration)
 	durationInMinutes := duration.Minutes()
 	calories := weight * speed * durationInMinutes / minInH
 	return calories, nil
@@ -82,30 +82,22 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	}
 
 	var dist, speed, calories float64
-	var errCal error
 
 	switch activity {
 	case "Ходьба":
 		dist = distance(steps, height)
 		speed = meanSpeed(steps, height, duration)
-		calories, errCal = WalkingSpentCalories(steps, weight, height, duration)
+		calories, err = WalkingSpentCalories(steps, weight, height, duration)
 	case "Бег":
 		dist = distance(steps, height)
 		speed = meanSpeed(steps, height, duration)
-		calories, errCal = RunningSpentCalories(steps, weight, duration)
+		calories, err = RunningSpentCalories(steps, weight, height, duration)
 	default:
-		return "", errors.New("unknown type of training")
+		return "", errors.New("неизвестный тип тренировки")
 	}
 
-	// Проверяем все ошибки
-	if errDist != nil {
-		return "", fmt.Errorf("distance calculation failed: %v", errDist)
-	}
-	if errSpeed != nil {
-		return "", fmt.Errorf("speed calculation failed: %v", errSpeed)
-	}
-	if errCal != nil {
-		return "", fmt.Errorf("calories calculation failed: %v", errCal)
+	if err != nil { // проверяем ошибки
+		return "", err
 	}
 
 	return fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f",
