@@ -6,7 +6,11 @@ import (
 	"os"
 
 	"github.com/Yandex-Practicum/tracker/internal/daysteps"
+<<<<<<< HEAD
 	"github.com/Yandex-Practicum/tracker/internal/spentcalories" // new import
+=======
+	"github.com/Yandex-Practicum/tracker/internal/spentcalories"
+>>>>>>> 95c55f1eead600b5bba5e1b3639def2464402d28
 )
 
 func main() {
