@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/Yandex-Practicum/tracker/internal/daysteps"
-	"github.com/Yandex-Practicum/tracker/internal/spentcalories"
+	"github.com/Yandex-Practicum/tracker/internal/spentcalories" // new import
 )
 
 func main() {
