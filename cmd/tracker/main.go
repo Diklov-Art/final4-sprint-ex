@@ -57,6 +57,7 @@ func main() {
 		if err != nil {
 			log.Printf("не получилось получить информацию о тренировке: %v", err)
 			//os.Exit(1)
+			continue // смотрим обработку дальше
 		}
 		trainingLog = append(trainingLog, trainingInfo)
 	}

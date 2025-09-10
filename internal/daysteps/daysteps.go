@@ -16,7 +16,7 @@ const (
 )
 
 // принимаем данные о кол-во шагов + время прогулки
-func parsePackage(data string) (int, time.Duration, error) {
+func ParsePackage(data string) (int, time.Duration, error) {
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
 		return 0, 0, errors.New("incorrect data format")
@@ -46,7 +46,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 
 // парсим строку ---> дистанция в км + кол-во кал.
 func DayActionInfo(data string, weight, height float64) string {
-	steps, duration, err := parsePackage(data)
+	steps, duration, err := ParsePackage(data)
 	if err != nil {
 		return ""
 	}
