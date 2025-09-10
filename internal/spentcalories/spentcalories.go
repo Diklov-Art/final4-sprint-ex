@@ -9,12 +9,39 @@ import (
 )
 
 const (
-	lenStep                    = 0.65 // средняя длина шага.
-	mInKm                      = 1000 // количество метров в километре.
-	minInH                     = 60   // количество минут в часе.
-	stepLengthCoefficient      = 0.45 // коэффициент для расчета длины шага на основе роста.
-	walkingCaloriesCoefficient = 0.5  // коэффициент для расчета калорий при ходьбе
+	StepLength                 = 0.65 // средняя длина шага
+	MInKm                      = 1000 // количество метров в километре
+	MinInH                     = 60   // количество минут в часе
+	StepLengthCoefficient      = 0.45 // коэффициент для расчета длины шага на основе роста
+	WalkingCaloriesCoefficient = 0.5  // коэффициент для расчета калорий при ходьбе
 )
+
+func ParsePackage(data string) (int, time.Duration, error) {
+	parts := strings.Split(data, ",")
+	if len(parts) != 2 {
+		return 0, 0, errors.New("incorrect data format")
+	}
+
+	steps, err := strconv.Atoi(strings.TrimSpace(parts[0]))
+	if err != nil {
+		return 0, 0, errors.New("incorrect format of the number of steps")
+	}
+
+	if steps <= 0 {
+		return 0, 0, errors.New("the number of steps must be positive")
+	}
+
+	duration, err := time.ParseDuration(strings.TrimSpace(parts[1]))
+	if err != nil {
+		return 0, 0, errors.New("incorrect duration format")
+	}
+
+	if duration <= 0 {
+		return 0, 0, errors.New("duration must be greater than zero")
+	}
+
+	return steps, duration, nil
+}
 
 func parseTraining(data string) (int, string, time.Duration, error) {
 	parts := strings.Split(data, ",")
@@ -40,27 +67,27 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 	return steps, activity, duration, nil
 }
 
-func distance(steps int, height float64) float64 {
-	stepLength := height * stepLengthCoefficient
-	return float64(steps) * stepLength / mInKm
+func Distance(steps int, height float64) float64 {
+	stepLength := height * StepLengthCoefficient
+	return float64(steps) * stepLength / MInKm
 }
 
-func meanSpeed(steps int, height float64, duration time.Duration) float64 {
+func MeanSpeed(steps int, height float64, duration time.Duration) float64 {
 	if duration <= 0 {
 		return 0
 	}
-	dist := distance(steps, height)
+	dist := Distance(steps, height)
 	return dist / duration.Hours()
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || weight <= 0 || duration <= 0 {
-		return 0, errors.New("incorrect parameters") // проверка
+		return 0, errors.New("incorrect parameters")
 	}
 
-	speed := meanSpeed(steps, height, duration)
+	speed := MeanSpeed(steps, height, duration)
 	durationInMinutes := duration.Minutes()
-	calories := weight * speed * durationInMinutes / minInH
+	calories := weight * speed * durationInMinutes / MinInH
 	return calories, nil
 }
 
@@ -69,9 +96,9 @@ func WalkingSpentCalories(steps int, weight, height float64, duration time.Durat
 		return 0, errors.New("incorrect parameters")
 	}
 
-	speed := meanSpeed(steps, height, duration)
+	speed := MeanSpeed(steps, height, duration)
 	durationInMinutes := duration.Minutes()
-	calories := weight * speed * durationInMinutes / minInH * walkingCaloriesCoefficient
+	calories := weight * speed * durationInMinutes / MinInH * WalkingCaloriesCoefficient
 	return calories, nil
 }
 
@@ -85,18 +112,18 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 	switch activity {
 	case "Ходьба":
-		dist = distance(steps, height)
-		speed = meanSpeed(steps, height, duration)
+		dist = Distance(steps, height)
+		speed = MeanSpeed(steps, height, duration)
 		calories, err = WalkingSpentCalories(steps, weight, height, duration)
 	case "Бег":
-		dist = distance(steps, height)
-		speed = meanSpeed(steps, height, duration)
+		dist = Distance(steps, height)
+		speed = MeanSpeed(steps, height, duration)
 		calories, err = RunningSpentCalories(steps, weight, height, duration)
 	default:
 		return "", errors.New("неизвестный тип тренировки")
 	}
 
-	if err != nil { // проверяем ошибки
+	if err != nil {
 		return "", err
 	}
 
