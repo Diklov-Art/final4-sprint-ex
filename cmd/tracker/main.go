@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/Yandex-Practicum/tracker/internal/daysteps"
 	"github.com/Yandex-Practicum/tracker/internal/spentcalories" // new import
@@ -57,7 +56,7 @@ func main() {
 		trainingInfo, err := spentcalories.TrainingInfo(v, weight, height)
 		if err != nil {
 			log.Printf("не получилось получить информацию о тренировке: %v", err)
-			os.Exit(1)
+			//os.Exit(1)
 		}
 		trainingLog = append(trainingLog, trainingInfo)
 	}
