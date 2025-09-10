@@ -25,18 +25,10 @@ func main() {
 
 	fmt.Println("Активность в течение дня")
 
-	var (
-		dayActionsInfo string
-		dayActionsLog  []string
-	)
-
 	for _, v := range input {
-		dayActionsInfo = daysteps.DayActionInfo(v, weight, height)
-		dayActionsLog = append(dayActionsLog, dayActionsInfo)
-	}
-
-	for _, v := range dayActionsLog {
-		fmt.Println(v)
+		dayActionsInfo := daysteps.DayActionInfo(v, weight, height)
+		fmt.Println(dayActionsInfo)
+		fmt.Println("---")
 	}
 
 	// тренировки
@@ -45,18 +37,18 @@ func main() {
 		"something is wrong",
 		"678,Бег,5m",
 		"1078,Бег,10m",
-		",3456 Ходьба",
+		",3456,Ходьба",
 		"7892,Ходьба,3h10m",
 		"15392,Бег,45m",
 	}
 
-	fmt.Println("\nЖурнал тренировок")
+	fmt.Println("Журнал тренировок")
 
 	for _, v := range trainings {
 		trainingInfo, err := spentcalories.TrainingInfo(v, weight, height)
 		if err != nil {
-			log.Printf("не получилось получить информацию о тренировке '%s': %v", v, err)
-			continue // продолжаем обработку остальных тренировок
+			log.Printf("Ошибка обработки тренировки '%s': %v", v, err)
+			continue
 		}
 		fmt.Println(trainingInfo)
 		fmt.Println("---")
