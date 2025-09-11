@@ -14,7 +14,7 @@ func main() {
 
 	// дневная активность
 	input := []string{
-		"678,50m",
+		"678,0h50m",
 		"792,1h14m",
 		"1078,1h30m",
 		"7830,2h40m",
@@ -25,10 +25,17 @@ func main() {
 
 	fmt.Println("Активность в течение дня")
 
+	var (
+		dayActionsLog []string
+	)
+
 	for _, v := range input {
 		dayActionsInfo := daysteps.DayActionInfo(v, weight, height)
-		fmt.Println(dayActionsInfo)
-		fmt.Println("---")
+		dayActionsLog = append(dayActionsLog, dayActionsInfo)
+	}
+
+	for _, v := range dayActionsLog {
+		fmt.Println(v)
 	}
 
 	// тренировки
