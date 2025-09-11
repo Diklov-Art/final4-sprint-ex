@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/Yandex-Practicum/tracker/internal/daysteps"
 	"github.com/Yandex-Practicum/tracker/internal/spentcalories"
@@ -27,12 +26,11 @@ func main() {
 	fmt.Println("Активность в течение дня")
 
 	var (
-		dayActionsInfo string
-		dayActionsLog  []string
+		dayActionsLog []string
 	)
 
 	for _, v := range input {
-		dayActionsInfo = daysteps.DayActionInfo(v, weight, height)
+		dayActionsInfo := daysteps.DayActionInfo(v, weight, height)
 		dayActionsLog = append(dayActionsLog, dayActionsInfo)
 	}
 
@@ -44,27 +42,22 @@ func main() {
 	trainings := []string{
 		"3456,Ходьба,3h00m",
 		"something is wrong",
-		"678,Бег,0h5m",
-		"1078,Бег,0h10m",
-		",3456 Ходьба",
+		"678,Бег,5m",
+		"1078,Бег,10m",
+		",3456,Ходьба",
 		"7892,Ходьба,3h10m",
-		"15392,Бег,0h45m",
-	}
-
-	var trainingLog []string
-
-	for _, v := range trainings {
-		trainingInfo, err := spentcalories.TrainingInfo(v, weight, height)
-		if err != nil {
-			log.Printf("не получилось получить информацию о тренировке: %v", err)
-			os.Exit(1)
-		}
-		trainingLog = append(trainingLog, trainingInfo)
+		"15392,Бег,45m",
 	}
 
 	fmt.Println("Журнал тренировок")
 
-	for _, v := range trainingLog {
-		fmt.Println(v)
+	for _, v := range trainings {
+		trainingInfo, err := spentcalories.TrainingInfo(v, weight, height)
+		if err != nil {
+			log.Printf("Ошибка обработки тренировки '%s': %v", v, err)
+			continue
+		}
+		fmt.Println(trainingInfo)
+		fmt.Println("---")
 	}
 }
