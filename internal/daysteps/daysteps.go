@@ -17,15 +17,17 @@ const (
 
 // ParsePackage принимаем данные о кол-во шагов + время прогулки
 func parsePackage(data string) (int, time.Duration, error) {
-	// Убираем все пробелы из входной строки
-	data = strings.ReplaceAll(data, " ", "")
+	// Проверяем наличие пробелов в данных
+	if strings.Contains(data, " ") {
+		return 0, 0, fmt.Errorf("incorrect data format")
+	}
 
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
 		return 0, 0, fmt.Errorf("incorrect data format")
 	}
 
-	steps, err := strconv.Atoi(parts[0])
+	steps, err := strconv.Atoi(strings.TrimSpace(parts[0]))
 	if err != nil {
 		return 0, 0, fmt.Errorf("incorrect format of the number of steps")
 	}
@@ -34,7 +36,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 		return 0, 0, fmt.Errorf("the number of steps must be positive")
 	}
 
-	duration, err := time.ParseDuration(parts[1])
+	duration, err := time.ParseDuration(strings.TrimSpace(parts[1]))
 	if err != nil {
 		return 0, 0, fmt.Errorf("incorrect duration format")
 	}
@@ -51,7 +53,7 @@ func DayActionInfo(data string, weight, height float64) string {
 	steps, duration, err := parsePackage(data)
 	if err != nil {
 		log.Printf("Ошибка обработки данных: %v (ввод: %s)", err, data)
-		return "" // возвращаем пустую строку
+		return "" // возвращаем пустую строку как ожидают тесты
 	}
 
 	distance := float64(steps) * stepLength / mInKm

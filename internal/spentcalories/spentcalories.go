@@ -27,14 +27,24 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 		return 0, "", 0, errors.New("incorrect number of steps")
 	}
 
+	// Валидация шагов
+	if steps <= 0 {
+		return 0, "", 0, errors.New("количество шагов должно быть положительным")
+	}
+
 	activity := strings.TrimSpace(parts[1])
 	if activity != "Ходьба" && activity != "Бег" {
-		return 0, "", 0, errors.New("unknown type of training")
+		return 0, "", 0, errors.New("неизвестный тип тренировки") // исправлено на русский
 	}
 
 	duration, err := time.ParseDuration(strings.TrimSpace(parts[2]))
 	if err != nil {
 		return 0, "", 0, errors.New("incorrect training duration format")
+	}
+
+	// Валидация продолжительности
+	if duration <= 0 {
+		return 0, "", 0, errors.New("продолжительность должна быть положительной")
 	}
 
 	return steps, activity, duration, nil
@@ -115,6 +125,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 		return "", err
 	}
 
+	// Добавлен завершающий \n
 	return fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n",
 		activity, duration.Hours(), dist, speed, calories), nil
 }
